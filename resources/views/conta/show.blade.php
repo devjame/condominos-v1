@@ -18,9 +18,10 @@
                     Divida: {{ $proprietario['divida'] }} €
                 </p>
                 <p class="px-6 py-4">
-                    Por Liquidar: {{ $proprietario['saldoAtual'] }} €
+                    Por Liquidar: {{ $proprietario['divida_atual'] }} €
                 </p>
             </div>
+            @if(count($proprietario['pagamentos']))
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full max-w-lg text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -43,7 +44,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($proprietario->pagamentos as $pagamento)
+                        @foreach($proprietario['pagamentos'] as $pagamento)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                             <td class="px-6 py-4">
                                 {{ $pagamento['valor'] }} €
@@ -69,7 +70,14 @@
                     </tbody>
                 </table>
             </div>
+            @else
+                <div class="max-w-sm flex item-center justify-center">
+                    <div class="space-y-4 text-center">
+                        <h2 class="font-medium text-lg text-gray-800 mb-4">Sem Pagamentos para mostrar!</h2>
+                        
+                    </div>
+                </div>
+            @endif
         </div>
         @include('conta.create-pagamento-form')
-        @include('conta.delete-pagamento-form')
 </x-app-layout>

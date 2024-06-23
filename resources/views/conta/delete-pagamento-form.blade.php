@@ -2,7 +2,7 @@
         <form method="post" action="{{ route('conta.delete', 
             [
                 'proprietario' => $proprietario['id'],
-                'id' => $pagamento['id'] 
+                'id' => $proprietario['pagamentos']['pagamentos.id'] 
             ]) 
             }}" class="p-6">
             @csrf

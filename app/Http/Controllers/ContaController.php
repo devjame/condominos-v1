@@ -14,28 +14,20 @@ class ContaController extends Controller
      */
     public function index()
     {
-        $dividasProprietarios = Proprietario::query()->select(['proprietarios.id','nome', 'divida_atual'])
-        ->join('pagamentos', "pagamentos.proprietario_id", '=', "proprietarios.id")
-        ->addSelect(DB::raw("divida - SUM(pagamentos.valor) as saldoAtual" ))
-        ->groupBy('proprietarios.id')
-        ->get();
+        $contaCorrente = Proprietario::all();
 
         return view("conta/index", [
-            "dividasProprietarios" => $dividasProprietarios,
+            "contaCorrente" => $contaCorrente,
         ]);
     }
 
 
     public function divida()
     {
-        $dividasProprietarios = Proprietario::query()->select(['proprietarios.id','nome', 'divida', 'fracao', 'divida_atual'])
-        ->join('pagamentos', "proprietarios.id", '=', "pagamentos.proprietario_id")
-        ->addSelect(DB::raw("proprietarios.divida - SUM(pagamentos.valor) as saldoAtual" ))
-        ->groupBy('proprietarios.id')
-        ->get();
+        $dividas = Proprietario::query()->select(['proprietarios.id','nome', 'divida', 'fracao', 'divida_atual'])->get();
 
         return view("conta/dividas", [
-            "dividasProprietarios" => $dividasProprietarios,
+            "dividas" => $dividas,
         ]);
     }
 
@@ -68,7 +60,7 @@ class ContaController extends Controller
 
         $payload = $proprietario->pagamentos()->save($pagamento);
 
-        // abatar a divida com o valor do pagamento
+        // abater a divida com o valor do pagamento
         $proprietario->divida_atual = $proprietario->divida_atual - $request->valor;
 
         $proprietario->save();
@@ -82,17 +74,20 @@ class ContaController extends Controller
     public function show(string $id)
     {
 
-        $proprietario = Proprietario::query()->select(['proprietarios.id','nome', 'divida', 'fracao', 'divida_atual'])
-        ->join('pagamentos', "proprietarios.id", '=', "pagamentos.proprietario_id")
-        ->addSelect(DB::raw("proprietarios.divida - SUM(pagamentos.valor) as saldoAtual" ))
-        ->where('proprietarios.id', $id)
-        ->groupBy('proprietarios.id')
-        ->get();
+        $proprietario = Proprietario::findOrFail($id);
 
         $proprietario->load('pagamentos');
 
+        $pagamentos = $proprietario['pagamentos'];
+
+        $total = 0;
+        foreach($pagamentos as $pagamento) {
+            $total += $pagamento['valor'];
+        }
+
         return view("conta/show", [
-            "proprietario" => $proprietario[0]
+            "proprietario" => $proprietario,
+            "divida_atual" => $total - $proprietario['divida_atual'] ,
         ]);
     }
 

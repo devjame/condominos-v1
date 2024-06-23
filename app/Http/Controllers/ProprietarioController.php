@@ -39,7 +39,7 @@ class ProprietarioController extends Controller
         $request->validate([
             'nome' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email'],
-            'phone' => ['required', 'string', "max:9"],
+            'phone' => ['required', 'string'],
             "fracao" => ['required', 'string'],
             "permilagem" => ['required', 'numeric']
         ]);
@@ -63,8 +63,6 @@ class ProprietarioController extends Controller
 
         $divida = self::calcDivida($permilagem);
 
-
-        
         Proprietario::create([
             "nome" => $request->nome,
             "email" => $request->email,

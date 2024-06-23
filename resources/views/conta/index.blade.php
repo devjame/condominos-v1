@@ -7,7 +7,7 @@
         </div>
     </x-slot>
         <div>
-            @if (count($dividasProprietarios))
+            @if (count($contaCorrente))
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full max-w-lg text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -24,16 +24,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach ($dividasProprietarios as $divida)
+                        @foreach ($contaCorrente as $conta)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $divida['nome'] }}
+                                    {{ $conta['nome'] }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    {{ $divida['saldoAtual'] }} €
+                                    {{ $conta['divida_atual'] }} €
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('conta.corrente', ['id' => $divida['id'] ]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ver Mais</a>
+                                    <a href="{{ route('conta.corrente', ['id' => $conta['id'] ]) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ver Mais</a>
                                 </td>
                             </tr>
                         @endforeach
