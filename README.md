@@ -43,6 +43,7 @@ Se ocorrer erro, verifique as credenciais da Base de Dados, ou, excute o seguint
 
 Na mesma pasta, execute no terminal
 > `npm install`
+
 >`npm run build`
 
 ### Adicionar o projeto ao aplicativo Herd
@@ -54,5 +55,9 @@ Na pasta `Projetos`, tenha a certeza que o pasta com os códigos já estaja lá,
 ### Executar o programa
 
 > `php artisan serve`
+
+> Caso o comando acima não resultar, tente:
+
+> `php -S localhost:8000 -t public/`
 
 Depois de executar o comando acima, vá para o browser e digite o link

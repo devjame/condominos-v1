@@ -17,7 +17,6 @@ class OrcamentoController extends Controller
 
         $orcamento_total = 0;
 
-        
         foreach ($orcamentos as $orcamento) {
             $orcamento_total = $orcamento_total + $orcamento['valor'];
         }
