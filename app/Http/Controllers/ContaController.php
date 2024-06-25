@@ -58,17 +58,17 @@ class ContaController extends Controller
 
         $proprietario = Proprietario::findOrFail($proprietario);
 
+        // verificar se a divida_atual está liquidada
+
+        if ($proprietario->divida_atual == 0) {
+            return redirect()->back()->with('status', "Divida liquidada!");
+        } else if ($request->valor > $proprietario->divida_atual) {
+            return redirect()->back()->with('status', "Valor maior do que a dívida!");
+        }
+
         $proprietario->pagamentos()->save($pagamento);
 
         // abater a divida com o valor do pagamento
-
-        // verificar se a divida_atual está liquidada
-        if ($proprietario->divida_atual === 0) {
-            return redirect()->back()->with('status', "Divida liquidada!");
-        } else if ($request->valor > $proprietario->divida_atual) {
-            return redirect()->back()->with('status', "Valor maior do que a ívida!");
-        }
-
         $divida = $proprietario->divida_atual - $request->valor;
 
         /* se resultado for negativo ou igual a zero, divida_atual -> 0; valor_a_retornar -> o excedente

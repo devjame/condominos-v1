@@ -10,6 +10,10 @@
         </div>
     </x-slot>
     <div>
+        <div>
+            @if(session('status')) <x-alert type="info" :message="session('status')"></x-alert>
+            @endif
+        </div>
         <div class="flex gap-4 px-6 py-4 bg-gray-50 dark:bg-gray-700 items-center justify-between font-semibold text-lg mb-4">
             <p class="px-6 py-4">
                 Divida: {{ $proprietario['divida'] }} €
