@@ -78,7 +78,7 @@ class OrcamentoController extends Controller
         $orcamento = Orcamento::find($id);
 
         $request->validate([
-            'valor' => ['required', 'decimal']
+            'valor' => ['required', ' numeric']
         ]);
 
         $orcamento->rubrica = $request->rubrica;

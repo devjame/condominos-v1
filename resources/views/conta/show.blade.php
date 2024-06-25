@@ -59,14 +59,14 @@
                             <form method="post" action="{{ route('conta.delete', 
                                     [
                                         'proprietario' => $proprietario['id'],
-                                        'id' => $proprietario['pagamentos']['pagamentos.id'] 
+                                        'id' => $pagamento['id'] 
                                     ]) 
                                     }}" class="p-6">
                                 @csrf
                                 @method('delete')
 
                                 <x-danger-button class="ms-3">
-                                    {{ __('Apagar Pagamento') }}
+                                    {{ __('Apagar') }}
                                 </x-danger-button>
                             </form>
                         </td>

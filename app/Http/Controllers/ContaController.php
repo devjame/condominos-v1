@@ -24,7 +24,7 @@ class ContaController extends Controller
 
     public function divida()
     {
-        $dividas = Proprietario::query()->select(['proprietarios.id','nome', 'divida', 'fracao', 'divida_atual'])->get();
+        $dividas = Proprietario::query()->select(['proprietarios.id', 'nome', 'divida', 'fracao', 'divida_atual'])->get();
 
         return view("conta/dividas", [
             "dividas" => $dividas,
@@ -58,11 +58,28 @@ class ContaController extends Controller
 
         $proprietario = Proprietario::findOrFail($proprietario);
 
-        $payload = $proprietario->pagamentos()->save($pagamento);
+        $proprietario->pagamentos()->save($pagamento);
 
         // abater a divida com o valor do pagamento
-        $proprietario->divida_atual = $proprietario->divida_atual - $request->valor;
 
+        // verificar se a divida_atual está liquidada
+        if ($proprietario->divida_atual === 0) {
+            return redirect()->back()->with('status', "Divida liquidada!");
+        } else if ($request->valor > $proprietario->divida_atual) {
+            return redirect()->back()->with('status', "Valor maior do que a ívida!");
+        }
+
+        $divida = $proprietario->divida_atual - $request->valor;
+
+        /* se resultado for negativo ou igual a zero, divida_atual -> 0; valor_a_retornar -> o excedente
+        * se for positivo, divida_atual -> resultado
+        */
+        if ($divida <= 0) {
+            $proprietario->divida_atual = 0;
+            // como guardar o execendente??
+        } else {
+            $proprietario->divida_atual = $divida;
+        }
         $proprietario->save();
 
         return redirect(route('conta.corrente', [$proprietario]));
@@ -81,13 +98,13 @@ class ContaController extends Controller
         $pagamentos = $proprietario['pagamentos'];
 
         $total = 0;
-        foreach($pagamentos as $pagamento) {
+        foreach ($pagamentos as $pagamento) {
             $total += $pagamento['valor'];
         }
 
         return view("conta/show", [
             "proprietario" => $proprietario,
-            "divida_atual" => $total - $proprietario['divida_atual'] ,
+            "divida_atual" => $total - $proprietario['divida_atual'],
         ]);
     }
 
